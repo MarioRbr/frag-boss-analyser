@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Boss Log Analyzer Pro</title>
+  <title>Frag Boss Analyzer</title>
   <style>
     :root {
       --bg-color: #121214;
@@ -133,15 +133,15 @@
 
 <body onload="carregarBosses()">
   <div class="analisador-container">
-    <h1>⚔️ Boss Analyzer</h1>
+    <h1>⚔️ Frag Boss Analyzer</h1>
 
     <div id="interface">
-      <label for="boss">Alvo do Log:</label>
+      <label for="boss">Boss:</label>
       <select id="boss">
         <option value="" disabled selected>Selecione o boss...</option>
       </select>
 
-      <label for="log">Log do Combat Window:</label>
+      <label for="log">Serverlog:</label>
       <textarea id="log" rows="10" placeholder="Cole as linhas do log aqui..."></textarea>
 
       <button onclick="analisarLog()">Analisar Performance</button>
