@@ -2,134 +2,167 @@
 <html lang="pt">
 <head>
   <meta charset="UTF-8">
-  <title>Analyzer de Log de Boss</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Boss Log Analyzer Pro</title>
   <style>
-    .analisador-container {
-      max-width: 100%;
-      margin: 0 auto;
-      text-align: center;
+    :root {
+      --bg-color: #121214;
+      --card-bg: #1e1e26;
+      --primary: #8257e5;
+      --primary-hover: #9466ff;
+      --text-color: #e1e1e6;
+      --text-dim: #a8a8b3;
+      --border: #29292e;
     }
 
-    .analisador-container h2 {
-      margin-top: 40px;
-    }
-
-    .analisador-container select,
-    .analisador-container textarea,
-    .analisador-container button {
-      display: block;
-      margin: 10px auto;
-      padding: 10px;
-      width: 100%;
-      max-width: 500px;
-      font-size: inherit;
-    }
-
-    .analisador-container table {
-      border-collapse: collapse;
-      margin: 20px auto;
-      width: 100%;
-      max-width: 500px;
-      background: white;
-      color: black;
-    }
-
-    .analisador-container th,
-    .analisador-container td {
-      border: 1px solid #ccc;
-      padding: 8px 12px;
-      text-align: left;
-    }
-
-    .analisador-container th {
-      background: #eee;
-    }
-
-    /* Modal */
-    .analisador-container .modal-fundo {
-      display: none;
-      position: fixed;
-      z-index: 10;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      overflow: auto;
-      background-color: rgba(0,0,0,0.5);
-    }
-
-    .analisador-container .modal-conteudo {
-      background-color: #fff;
-      margin: 15% auto;
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
       padding: 20px;
-      border-radius: 10px;
-      width: 90%;
-      max-width: 400px;
-      text-align: center;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-      color: black;
+      display: flex;
+      justify-content: center;
     }
 
-    .analisador-container .modal-conteudo button {
-      margin-top: 15px;
-      background-color: #444;
+    .analisador-container {
+      width: 100%;
+      max-width: 700px;
+      background: var(--card-bg);
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      border: 1px solid var(--border);
+    }
+
+    h1 { color: var(--primary); font-size: 1.8rem; margin-bottom: 25px; }
+    h2 { font-size: 1.2rem; margin-top: 30px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
+
+    label {
+      display: block;
+      text-align: left;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: var(--text-dim);
+    }
+
+    select, textarea {
+      width: 100%;
+      background: var(--bg-color);
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      color: white;
+      padding: 12px;
+      box-sizing: border-box;
+      font-size: 1rem;
+      margin-bottom: 20px;
+      transition: border-color 0.3s;
+    }
+
+    select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    button {
+      width: 100%;
+      background: var(--primary);
       color: white;
       border: none;
-      padding: 10px 20px;
-      font-size: inherit;
-      border-radius: 5px;
+      padding: 15px;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: bold;
       cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
     }
 
-    .analisador-container .modal-conteudo button:hover {
-      background-color: #000;
+    button:hover { background: var(--primary-hover); }
+    button:active { transform: scale(0.98); }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 15px 0;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border);
     }
+
+    th, td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th { background: #29292e; color: var(--primary); }
+    tr:last-child td { border-bottom: none; }
+    tr:hover { background: rgba(255,255,255,0.03); }
+
+    /* Modal Estilizado */
+    .modal-fundo {
+      display: none;
+      position: fixed;
+      z-index: 100;
+      left: 0; top: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-conteudo {
+      background: var(--card-bg);
+      margin: 15% auto;
+      padding: 30px;
+      border-radius: 15px;
+      width: 80%;
+      max-width: 400px;
+      border: 1px solid var(--primary);
+      text-align: center;
+    }
+
+    .btn-voltar {
+      background: transparent;
+      border: 1px solid var(--text-dim);
+      margin-top: 20px;
+    }
+
+    .btn-voltar:hover { background: rgba(255,255,255,0.1); }
   </style>
 </head>
 
 <body onload="carregarBosses()">
   <div class="analisador-container">
+    <h1>⚔️ Boss Analyzer</h1>
 
     <div id="interface">
-      <label for="boss">Selecione o Boss:</label>
+      <label for="boss">Alvo do Log:</label>
       <select id="boss">
-        <option value="" disabled selected>Selecione um boss...</option>
+        <option value="" disabled selected>Selecione o boss...</option>
       </select>
 
-      <label for="log">Cole seu log aqui:</label>
-      <textarea id="log" rows="10" placeholder="Cole aqui o log do jogo..."></textarea>
+      <label for="log">Log do Combat Window:</label>
+      <textarea id="log" rows="10" placeholder="Cole as linhas do log aqui..."></textarea>
 
-      <button onclick="analisarLog()">Analisar</button>
+      <button onclick="analisarLog()">Analisar Performance</button>
     </div>
 
     <div id="resultados" style="display: none;">
-      <h2>Dano Total por Jogador</h2>
-      <table id="tabelaDanoTotal">
-        <tr>
-          <th>Jogador</th>
-          <th>Dano Total</th>
-        </tr>
-      </table>
+      <h2>📊 Dano Total</h2>
+      <table id="tabelaDanoTotal"></table>
 
-      <h2>5 Maiores Danos</h2>
-      <table id="tabelaTop5">
-        <tr>
-          <th>Jogador</th>
-          <th>Dano</th>
-        </tr>
-      </table>
+      <h2>🏆 Top 5 Maiores Hits</h2>
+      <table id="tabelaTop5"></table>
 
-      <button onclick="voltarParaInicio()">Analisar outro Boss</button>
+      <button class="btn-voltar" onclick="voltarParaInicio()">Limpar e Voltar</button>
     </div>
+  </div>
 
-    <!-- Modal -->
-    <div id="modal" class="modal-fundo" onclick="fecharModalAoClicarFora(event)">
-      <div class="modal-conteudo">
-        <p id="modalMensagem">Mensagem aqui</p>
-        <button onclick="fecharModal()">OK</button>
-      </div>
+  <div id="modal" class="modal-fundo" onclick="fecharModalAoClicarFora(event)">
+    <div class="modal-conteudo">
+      <p id="modalMensagem" style="font-size: 1.1rem; margin-bottom: 20px;"></p>
+      <button onclick="fecharModal()">Entendido</button>
     </div>
-
   </div>
 
   <script>
@@ -140,7 +173,6 @@
         const response = await fetch(bossesUrl);
         const text = await response.text();
         const bosses = text.split('\n').filter(boss => boss.trim() !== '');
-
         const bossDropdown = document.getElementById('boss');
 
         bosses.forEach(boss => {
@@ -149,9 +181,8 @@
           option.textContent = boss.trim();
           bossDropdown.appendChild(option);
         });
-
       } catch (error) {
-        console.error('Erro ao carregar a lista de bosses:', error);
+        console.error('Erro ao carregar bosses:', error);
       }
     }
 
@@ -160,129 +191,70 @@
       document.getElementById('modal').style.display = 'block';
     }
 
-    function fecharModal() {
-      document.getElementById('modal').style.display = 'none';
-    }
-
-    function fecharModalAoClicarFora(event) {
-      if (event.target.id === "modal") {
-        fecharModal();
-      }
-    }
-
-    document.addEventListener("keydown", function(event) {
-      if (event.key === "Escape") {
-        fecharModal();
-      }
-    });
+    function fecharModal() { document.getElementById('modal').style.display = 'none'; }
+    
+    function fecharModalAoClicarFora(event) { if (event.target.id === "modal") fecharModal(); }
 
     function analisarLog() {
       const boss = document.getElementById('boss').value;
       const log = document.getElementById('log').value.trim();
 
-      if (!boss) {
-        mostrarModal('Por favor, selecione um boss antes de continuar.');
-        return;
-      }
-
-      if (!log) {
-        mostrarModal('Por favor, cole o log do jogo antes de continuar.');
+      if (!boss || !log) {
+        mostrarModal('Selecione o boss e cole o log para analisar!');
         return;
       }
 
       const linhas = log.split('\n');
-
-      const regex = new RegExp(
-        `${boss} loses (\\d+) hitpoints due to (?:a |your |an )?(?:critical )?attack(?: by (.+?))?\\.`
-      );
-
+      const regex = new RegExp(`${boss} loses (\\d+) hitpoints due to (?:a |your |an )?(?:critical )?attack(?: by (.+?))?\\.`);
+      
       const danoTotal = {};
       const danosIndividuais = [];
-
-      const ignorar = [
-        "a knight familiar",
-        "a paladin familiar",
-        "a druid familiar",
-        "a sorcerer familiar",
-        "a monk familiar"
-      ];
+      const ignorar = ["a knight familiar", "a paladin familiar", "a druid familiar", "a sorcerer familiar", "a monk familiar"];
 
       for (const linha of linhas) {
         const match = linha.match(regex);
-
         if (match) {
           const dano = parseInt(match[1]);
           let jogador = match[2] ? match[2].trim() : "Você";
+          if (jogador.toLowerCase().includes("your")) jogador = "Você";
+          if (ignorar.includes(jogador)) continue;
 
-          if (jogador.toLowerCase().includes("your")) {
-            jogador = "Você";
-          }
-
-          if (ignorar.includes(jogador)) {
-            continue;
-          }
-
-          if (!danoTotal[jogador]) {
-            danoTotal[jogador] = 0;
-          }
-
-          danoTotal[jogador] += dano;
-
-          danosIndividuais.push({
-            jogador,
-            dano
-          });
+          danoTotal[jogador] = (danoTotal[jogador] || 0) + dano;
+          danosIndividuais.push({ jogador, dano });
         }
       }
 
       if (danosIndividuais.length === 0) {
-        mostrarModal(
-          'Nenhum dado correspondente ao boss selecionado foi encontrado no log.'
-        );
+        mostrarModal('Nenhum dano encontrado para este boss no log fornecido.');
         return;
       }
 
-      const ordenadoPorDano = Object.entries(danoTotal)
-        .map(([jogador, dano]) => ({
-          jogador,
-          dano
-        }))
+      const ordenadoTotal = Object.entries(danoTotal)
+        .map(([jogador, dano]) => ({ jogador, dano }))
         .sort((a, b) => b.dano - a.dano);
 
-      const top5 = danosIndividuais
-        .sort((a, b) => b.dano - a.dano)
-        .slice(0, 5);
+      const top5 = danosIndividuais.sort((a, b) => b.dano - a.dano).slice(0, 5);
 
       document.getElementById('interface').style.display = 'none';
       document.getElementById('resultados').style.display = 'block';
 
-      const tabelaDanoTotal = document.getElementById('tabelaDanoTotal');
-      const tabelaTop5 = document.getElementById('tabelaTop5');
+      renderTable('tabelaDanoTotal', ['Jogador', 'Dano Total'], ordenadoTotal);
+      renderTable('tabelaTop5', ['Jogador', 'Dano'], top5);
+    }
 
-      tabelaDanoTotal.innerHTML =
-        `<tr><th>Jogador</th><th>Dano Total</th></tr>`;
-
-      tabelaTop5.innerHTML =
-        `<tr><th>Jogador</th><th>Dano</th></tr>`;
-
-      ordenadoPorDano.forEach(item => {
-        const row = tabelaDanoTotal.insertRow();
-        row.insertCell().textContent = item.jogador;
-        row.insertCell().textContent = item.dano;
+    function renderTable(id, headers, data) {
+      const table = document.getElementById(id);
+      let html = `<tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr>`;
+      data.forEach(item => {
+        html += `<tr><td>${item.jogador}</td><td>${item.dano.toLocaleString()}</td></tr>`;
       });
-
-      top5.forEach(item => {
-        const row = tabelaTop5.insertRow();
-        row.insertCell().textContent = item.jogador;
-        row.insertCell().textContent = item.dano;
-      });
+      table.innerHTML = html;
     }
 
     function voltarParaInicio() {
       document.getElementById('resultados').style.display = 'none';
       document.getElementById('interface').style.display = 'block';
       document.getElementById('log').value = '';
-      document.getElementById('boss').selectedIndex = 0;
     }
   </script>
 </body>
